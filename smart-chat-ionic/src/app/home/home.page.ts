@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Message } from "../interfaces/message.interface";
+import { OpenaiService } from "../services/openai.service";
 
 @Component({
   selector: "app-home",
@@ -19,7 +20,7 @@ export class HomePage {
 
   loading: boolean = false;
 
-  constructor() {}
+  constructor(private openaiService: OpenaiService) {}
 
   submit() {
     let prompt = this.form.value.prompt as string;
@@ -37,11 +38,21 @@ export class HomePage {
 
     this.loading = true;
 
-    setTimeout(() => {
-      this.loading = false;
-      this.typeText("Estoy bien, y tú como estás?");
-      this.form.enable();
-    }, 2000);
+    this.openaiService.sendQuestion(prompt).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.log(error);
+      },
+    });
+
+    // setTimeout(() => {
+    //   this.loading = false;
+    //   this.typeText("Estoy bien, y tú como estás?");
+    //   this.form.enable();
+    // }, 2000);
   }
 
   typeText(text: string) {
