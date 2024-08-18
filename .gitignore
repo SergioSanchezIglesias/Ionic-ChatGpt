@@ -1,1 +1,7 @@
-server/node_modules
+node_modules
+.env
+.angular
+.vscode
+android
+ios
+www

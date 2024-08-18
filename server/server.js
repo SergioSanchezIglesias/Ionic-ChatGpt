@@ -20,16 +20,31 @@ app.get("/", async (req, res) => {
   res.status(200).send({ message: "Hello World" });
 });
 
+const conversationHistory = {};
+
 app.post("/", async (req, res) => {
   try {
+    const userId = 1234;
     const prompt = req.body.prompt;
+
+    if (!conversationHistory[userId]) {
+      conversationHistory[userId] = [];
+    }
+    conversationHistory[userId].push({ role: "user", content: prompt });
+
     const response = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-1106",
+      model: "gpt-3.5-turbo",
+      messages: conversationHistory[userId],
+    });
+
+    const botMessage = response.choices[0].message.content;
+    conversationHistory[userId].push({
+      role: "assistant",
+      content: botMessage,
     });
 
     res.status(200).send({
-      bot: response.data.choices[0],
+      bot: botMessage,
     });
   } catch (error) {
     console.log(error);

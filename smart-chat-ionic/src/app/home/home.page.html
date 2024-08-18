@@ -1,10 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title> Blank </ion-title>
+    <ion-title class="ion-text-center"> <strong>Smart</strong> chat </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [scrollEvents]="true">
+  <div *ngIf="!messages.length" class="empty">
+    <ion-icon src="assets/icon/bot.svg"></ion-icon>
+    <h4>Escribe algo...</h4>
+  </div>
+
   <ion-item
     class="chat-item"
     lines="none"
@@ -22,7 +27,7 @@
       ></ion-icon>
     </ion-badge>
     <ion-label class="ion-text-wrap">
-      {{ m.content }}
+      <p class="w-space">{{ m.content }}</p>
       <ion-spinner
         *ngIf="loading && (i + 1 === messages.length)"
         color="tertiary"
@@ -34,7 +39,7 @@
 
 <ion-footer class="ion-padding">
   <form [formGroup]="form" (ngSubmit)="submit()" (keyup.enter)="submit()">
-    <ion-item class="text-box-item">
+    <ion-item lines="none" class="text-box-item">
       <ion-textarea
         autoGrow="true"
         placeholder="Escribe algo..."
@@ -42,9 +47,8 @@
       ></ion-textarea>
 
       <ion-buttons slot="end">
-        <ion-button>
-          <ion-icon name="send"></ion-icon>
-          Click me
+        <ion-button color="tertiary" (click)="submit()">
+          <ion-icon name="send" class="submit-icon"></ion-icon>
         </ion-button>
       </ion-buttons>
     </ion-item>
